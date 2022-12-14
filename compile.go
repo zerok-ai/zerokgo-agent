@@ -69,34 +69,35 @@ func makeCompileCommandExecutionFunc(flags *compileFlagSet, args []string) comma
 
 func instrumentFuncDeclPre(funcDecl *dst.FuncDecl) {
 	if funcDecl.Name.Name == "gopanic" {
-		fmt.Printf("Pre: The function name is %v.\n", funcDecl.Name)
-		fmt.Printf("Pre: The function type param name is %v and obj is %v.\n", funcDecl.Type.Params.List[0].Names[0].Name, funcDecl.Type.Params.List[0].Names[0].Obj.Kind)
-		fmt.Printf("Pre: The receiving argumments are %v\n.", funcDecl.Recv)
+		// fmt.Printf("Pre: The function name is %v.\n", funcDecl.Name)
+		// fmt.Printf("Pre: The function type param name is %v and obj is %v.\n", funcDecl.Type.Params.List[0].Names[0].Name, funcDecl.Type.Params.List[0].Names[0].Obj.Kind)
+		// fmt.Printf("Pre: The receiving argumments are %v\n.", funcDecl.Recv)
 
 		stmt := getDstStatement(funcDecl)
 
-		funcDecl.Body.List = append([]dst.Stmt{stmt}, funcDecl.Body.List...)
+		funcDecl.Body.List = append(stmt, funcDecl.Body.List...)
 
 	}
 }
 
-func getDstStatement(funcDecl *dst.FuncDecl) dst.Stmt {
-	return &dst.BlockStmt{
-		List: []dst.Stmt{
-			&dst.ExprStmt{
-				X: &dst.CallExpr{
-					Fun: dst.NewIdent("print"),
-					Args: []dst.Expr{
-						&dst.BasicLit{
-							Kind:  token.STRING,
-							Value: "Rajeev\n",
-						},
-					},
-					Ellipsis: false,
+func getDstStatement(funcDecl *dst.FuncDecl) []dst.Stmt {
+	stmt := []dst.Stmt{
+		&dst.ExprStmt{
+			X: &dst.CallExpr{
+				Fun: &dst.Ident{
+					Name: "print",
 				},
+				Args: []dst.Expr{
+					&dst.BasicLit{
+						Kind:  token.STRING,
+						Value: "e",
+					},
+				},
+				Ellipsis: false,
 			},
 		},
 	}
+	return stmt
 }
 
 func instrumentPre(cursor *dstutil.Cursor) bool {
