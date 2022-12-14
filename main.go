@@ -21,13 +21,13 @@ func fix(dir string) {
 	for _, pkg := range pkgs {
 		for fileName, file := range pkg.Files {
 			if strings.Contains(fileName, "panic.go") {
-				fmt.Printf("working on file %v\n", fileName)
+				//fmt.Printf("working on file %v\n", fileName)
 				ast.Inspect(file, func(n ast.Node) bool {
 					fn, ok := n.(*ast.FuncDecl)
 					if ok {
 						// current node is a function!
 						if fn.Name.Name == "gopanic" {
-							fmt.Printf("Func name is %v.\n", fn.Name.Name)
+							//fmt.Printf("Func name is %v.\n", fn.Name.Name)
 							stmt := []ast.Stmt{
 								&ast.ExprStmt{
 									X: &ast.CallExpr{
